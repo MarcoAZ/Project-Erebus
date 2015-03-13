@@ -2,7 +2,7 @@
 * Author: Marco Zamora
 * Class: CS 162
 * Date: 3/7/15
-* Edited: 3/11/15
+* Edited: 3/12/15
 * Final Project
 *
 * Purpose: definitions for rooms, player, and items
@@ -171,7 +171,24 @@ void Cubicle1::listActions(vector<Room*> map, Player* p)
 		cout << " Say Hello ";
 	}
 }
-
+//senior developer's possible actions
+void Cubicle2::listActions(vector<Room*> map, Player* p)
+{
+	if(this->isDistracted())
+	{
+		cout << " Use Computer ";
+	}
+	//else if player put cupcakes in break room
+	//using static_cast because the pointer is an abstract class pointer
+	else if(!this->isDistracted() && static_cast<Breakroom*>(map[BREAK])->hasCakes())
+	{
+		cout << " Tell him about Cupcakes ";
+	}
+	else if (!this->isDistracted() && !static_cast<Breakroom*>(map[BREAK])->hasCakes())
+	{
+		cout << " Say Hello ";
+	}
+}
 //user can leave cupcakes in the breakroom
 void Breakroom::listActions(vector<Room*> map, Player* p)
 {
@@ -184,6 +201,19 @@ void Breakroom::listActions(vector<Room*> map, Player* p)
 	else
 	{
 		cout << "There's nothing interesting to see...";
+	}
+}
+//server options
+void Server::listActions(vector<Room*> map, Player* p)
+{
+	bool hasCard = p->inPocket("Keycard");
+	if(hasCard)
+	{
+		cout << "Use the server";
+	}
+	else
+	{
+		cout << "Try the door";
 	}
 }
 
@@ -208,6 +238,7 @@ void Boss::interact(Room* room, vector<Room*> map, Player* p )
 	else if(!this->isDistracted() && static_cast<Breakroom*>(map[BREAK])->hasCakes())
 	{
 		this->distract(true);
+		cout << "\"I left some cupcakes in the breakroom!\"";
 	}
 	else
 	{
@@ -236,7 +267,25 @@ void Cubicle1::interact(Room* room, vector<Room*> map, Player* p)
 		cout << "Everything ok?" << endl;
 	}
 }
-
+//senior developer's interaction options
+void Cubicle2::interact(Room* room, vector<Room*> map, Player* p)
+{
+	if(this->isDistracted())
+	{
+		//copy files from computer
+		cout << "Copying data!" << endl;
+	}
+	else if(!this->isDistracted() && static_cast<Breakroom*>(map[BREAK])->hasCakes())
+	{
+		this->distract(true);
+	}
+	else
+	{
+		//short conversation
+		//TEMPORARY
+		cout << "Everything ok?" << endl;
+	}
+}
 //break room interaction
 void Breakroom::interact(Room* room, vector<Room*> map, Player* p )
 {
@@ -248,13 +297,37 @@ void Breakroom::interact(Room* room, vector<Room*> map, Player* p )
 		p->removeItem("Cupcakes");
 		//set breakroom to having cupcakes
 		this->setCakes(hasCupcakes);
+		cout << "You leave cupcakes for your coworkers. How nice of you!";
 	}
 	else
 	{
 		cout << "There's nothing interesting to see...";
 	}
 }
-
+//server interactions
+void Server::interact(Room* room, vector<Room*> map, Player* p )
+{
+	bool hasCard = p->inPocket("Keycard");
+	if(hasCard)
+	{
+		bool hasUSB = p->inPocket("USB Drive");
+		if(hasUSB)
+		{
+			cout << "Uploaded the killswitch to the server!";
+			//set the usb to show that the USB has uploaded the killswitch
+			Item* usb = p->getUSB();
+			static_cast<USB*>(usb)->uploading(true);
+		}
+		else
+		{
+			cout << "There's nothing to do with the server right now";
+		}
+	}
+	else
+	{
+		cout << "The door is locked and you need a key card to get in";
+	}
+}
 /*
 * Purpose: gets a choice from the use for an item to pick up, then adds it to player's pocket
 * Parameters: takes the current room
@@ -289,7 +362,7 @@ void Player::chooseItem(Room* room)
 	}
 }
 /*
-* Purpose: if there is room in pocket, grabs an item
+* Purpose: if there is space in pocket, grabs an item
 * Parameters: takes the item the player wants to grab
 * Return: true if item grabbed
 */
@@ -343,6 +416,25 @@ bool Player::inPocket(string name)
 	return false;
 }
 /*
+* Purpose: get a pointer to the usb drive in the player's pocket
+* Parameters: none
+* Return: pointer to the usb drive
+*/
+Item* Player::getUSB()
+{	//go through your pockets
+	vector<Item*>* pocket = this->getPocket();
+	for(unsigned int i = 0; i < pocket->size(); i++)
+	{
+		if(pocket->at(i)->getName() == "USB Drive")
+		{	//did we find the item?
+			return pocket->at(i);
+		}
+	}
+	//control should not reach here!
+	cout << "ERROR! USB was not in player's pocket!" << endl;
+	exit(-2);
+}
+/*
 * Purpose: Checks every requirement to see if mission was full success
 * Parameters: takes none
 * Return: true if all requirements met
@@ -355,17 +447,17 @@ bool Player::allDone()
 		return false;
 	}
 	//email data?
-	if( !(this->hasEmailData(this->getPocket())) )
+	if( !(this->hasEmailData()) )
 	{
 		return false;
 	}
 	//data samples?
-	if( !(this->hasCodeData(this->getPocket())) )
+	if( !(this->hasCodeData()) )
 	{
 		return false;
 	}
 	//uploaded kill switch?
-	if( !(this->uploadedUSB(this->getPocket())) )
+	if( !(this->uploadedUSB()) )
 	{
 		return false;
 	}
@@ -376,18 +468,29 @@ bool Player::allDone()
 /*
 * Purpose: All three check the player's pocket, finds the usb, and checks if a certain
 *		task was completed
-*Parameters: takes a vector representing the player's pocket
+*Parameters: nothing
 * Return: true if requirement met
 */
-bool Player::hasEmailData( vector<Item*>* pocket )
+bool Player::hasEmailData()
+{	//go through your pockets
+	vector<Item*>* pocket = this->getPocket();
+	for(unsigned int i = 0; i < pocket->size(); i++)
+	{
+		if(pocket->at(i)->getName() == "USB Drive")
+		{	//did we find the item? If so does it have the data we need?
+			if( static_cast<USB*>(pocket->at(i))->getUpload() )
+				return true;
+			//we found the usb, no need to keep looking
+			return false;
+		}
+	}
+	return false;
+}
+bool Player::hasCodeData()
 {
 	return true;
 }
-bool Player::hasCodeData( vector<Item*>* pocket )
-{
-	return true;
-}
-bool Player::uploadedUSB( vector<Item*>* pocket )
+bool Player::uploadedUSB()
 {
 	return true;
 }

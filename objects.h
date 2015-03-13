@@ -2,7 +2,7 @@
 * Author: Marco Zamora
 * Class: CS 162
 * Date: 3/7/15
-* Edited: 3/11/15
+* Edited: 3/12/15
 * Final Project
 *
 * Purpose: declarations for rooms, player, and items
@@ -178,10 +178,12 @@ public:
 	void chooseItem(Room* room);//choose an item from the room to pass to grabItem
 	void removeItem( string );	//remove item from pocket
 	bool inPocket( string );	//is specified item in pocket?
-	bool hasEmailData( vector<Item*>* pocket );	//finds usb in player's pocket 
+	Item* getUSB();//gets pointer to the usb
+	
+	bool hasEmailData();	//finds usb in player's pocket 
 												//and determines if it has the email evidence
-	bool hasCodeData( vector<Item*>* pocket );	//checks if code data is on usb
-	bool uploadedUSB( vector<Item*>* pocket );	//checks if usb was used on server
+	bool hasCodeData();	//checks if code data is on usb
+	bool uploadedUSB();	//checks if usb was used on server
 	
 	bool allDone();	//checks if all of the requirements for mission complete are met
 };
@@ -258,6 +260,10 @@ private:
 public:
 	Server() : Room(){};
 	Server(type t) : Room(t){};
+	
+	void listActions(vector<Room*>, Player*);	//lists what can be done in the room
+	void interact(Room*, vector<Room*>, Player*);//user can select what to do in the room
+
 };
 
 //neighbor object is a room that leads to either Cubicle1, Cubicle2, or boss office
@@ -312,10 +318,19 @@ public:
 class Cubicle2 : public Room
 {
 private:
-
+	bool distracted; //has the player removed coworker from the cubicle
 public:
 	Cubicle2() : Room(){};
 	Cubicle2(type t) : Room(t){};
+	
+	void listActions(vector<Room*>, Player*);	//lists what can be done in the room
+	void interact(Room*, vector<Room*>, Player*);//user can select what to do in the room
+	
+	bool isDistracted()
+	{	return distracted;}
+	
+	void distract(bool b)
+	{	distracted = b;}
 };
 
 //outside. the final room
@@ -378,10 +393,16 @@ public:
 class USB : public Item
 {
 private:
-	
+	bool uploaded;		//was it uploaded to the server?
 public:
 	USB() : Item(){};
 	USB(string n) : Item(n){};
+	
+	void uploading(bool b)	//set uploaded
+	{	uploaded = b;}
+	
+	bool getUpload()		//get uploaded status
+	{	return uploaded;}
 };
 
 //keycard

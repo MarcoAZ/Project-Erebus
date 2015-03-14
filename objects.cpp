@@ -266,8 +266,8 @@ void Boss::interact(Room* room, vector<Room*> map, Player* p )
 	{
 		//search email
 		cout << "Doing spy stuff!" << endl;
-		Item* USB = player->getUSB();
-		static_cast<USB*>(USB)->copyEmails(true);
+		Item* usb = p->getUSB();
+		static_cast<USB*>(usb)->copyEmails(true);
 	}
 	else if(!this->isDistracted() && static_cast<Breakroom*>(map[BREAK])->hasCakes())
 	{
@@ -289,8 +289,8 @@ void Cubicle1::interact(Room* room, vector<Room*> map, Player* p)
 	{
 		//copy files from computer
 		cout << "Copying data!" << endl;
-		Item* USB = player->getUSB();
-		static_cast<USB*>(USB)->copyData(true);
+		Item* usb = p->getUSB();
+		static_cast<USB*>(usb)->copyData(true);
 	}
 	else if(!this->isDistracted() && static_cast<Breakroom*>(map[BREAK])->hasCakes())
 	{
@@ -310,8 +310,8 @@ void Cubicle2::interact(Room* room, vector<Room*> map, Player* p)
 	{
 		//copy files from computer
 		cout << "Copying data!" << endl;
-		Item* USB = player->getUSB();
-		static_cast<USB*>(USB)->copyData(true);
+		Item* usb = p->getUSB();
+		static_cast<USB*>(usb)->copyData(true);
 	}
 	else if(!this->isDistracted() && static_cast<Breakroom*>(map[BREAK])->hasCakes())
 	{

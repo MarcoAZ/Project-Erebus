@@ -15,6 +15,7 @@ int main()
 	//introduce the game
 	
 	//gave tester ability to see the goal for the game
+	showGoal();
 	
 	//make rooms
 	vector<Room*> HQ;

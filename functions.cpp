@@ -261,6 +261,27 @@ void loadItems(vector<Room*>& map )
 	map[BOSS]->addItemToRoom(key);
 	//end boss office
 }
-
-
+/*
+*	Purpose: allows user to see the cheat sheet for the game
+*	Parameters: none
+*	Returns: nothing
+*/
+void showGoal()
+{
+	cout << "Would you like the answer to this game?(Y/N): ";
+	char ans;
+	while( !(cin >> ans) || (toupper(ans) != 'Y' && toupper(ans) != 'N'))
+	{
+		cout << "Response must be Y or N: ";
+	}
+	if(toupper(ans) == 'Y')
+	{
+		cout << "To complete the mission, you must 1)Pick up the newspaper with the ";
+		cout << "USB hidden inside, 2) Buy cupcakes from the lobby and leave them ";
+		cout << "in the breakroom, 3)Tell the supervisor and at least one other ";
+		cout << "coworker about the cupcakes, 4)Use their PCs to get evidence ";
+		cout << "5)Get the keycard from the supervisor's office to access the server room, ";
+		cout << "and 6)Use the USB drive on the server. Finally, leave the building!";
+	}
+}
 

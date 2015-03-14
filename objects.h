@@ -74,6 +74,7 @@ public:
 												//interact with item, object, or person
 	virtual void listActions(vector<Room*>, Player*);//lists available interactions in room
 	virtual void interact(Room*, vector<Room*>, Player*);//user can select what to do in the room
+	virtual ~Room();
 	
 	vector<Item*>* getItems()		//get reference to items
 	{	return &roomItems;}
@@ -144,6 +145,7 @@ public:
 		currentRoom = current;
 		abortMission = false;
 	};
+	~Player();
 	
 	Room* getCurrentRoom()		//current room location and room changes
 	{	return currentRoom;}

@@ -29,6 +29,15 @@ void displayTitle(string msg)
 	cout << endl;
 }
 
+Room::~Room()
+{
+	vector<Item*>* roomItems = this->getItems();
+	for(unsigned int j = 0; j < roomItems->size(); j++)
+	{
+		delete roomItems->at(j);
+	}
+}
+
 /*
 * Purpose: lists the options available in the room, include leaving and interacting
 *			with items. 
@@ -582,4 +591,17 @@ bool Player::uploadedUSB()
 	}
 	return false;
 }
-
+/*
+* Purpose: player class destrucor. Deletes any items in player pocket
+*Parameters: nothing
+* Return: nothing
+*/
+Player::~Player()
+{
+	vector<Item*>* items = this->getPocket();
+	int pocketSize = (int)items->size();
+	for(int i = 0; i < pocketSize; i++)
+	{
+		delete items->at(i);
+	}
+}

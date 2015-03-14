@@ -2,7 +2,7 @@
 * Author: Marco Zamora
 * Class: CS 162
 * Date: 3/10/15
-* Edited: 3/13/15
+* Edited: 3/14/15
 * Final Project
 *
 * Purpose: provides definitions for the functions that run the main function
@@ -285,3 +285,15 @@ void showGoal()
 	}
 }
 
+/*
+*	Purpose: frees allocated room memory. Goes through each room, and deletes it
+*	Parameters: the map
+*	Returns: nothing
+*/
+void deleteRooms(vector<Room*>& map)
+{
+	for(int i = MYDESK; i <= OUT; i++)
+	{
+		delete map.at(i);
+	}
+}

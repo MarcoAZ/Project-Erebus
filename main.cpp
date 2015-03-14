@@ -2,7 +2,7 @@
 * Author: Marco Zamora
 * Class: CS 162
 * Date: 3/7/15
-* Edited: 3/13/15
+* Edited: 3/14/15
 * Final Project
 *
 * Purpose: the engine for the text adventure
@@ -37,11 +37,10 @@ int main()
 	//play game while user has not met finish requirements
 	play(player, HQ);
 	
-	//deallocate items
+	//deallocate rooms and items in rooms
+	deleteRooms(HQ);
 	
-	//deallocate rooms
-	
-	//deallocate player
+	//deallocate player and any items in pocket
 	delete player;
 	
 	//exit

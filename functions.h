@@ -2,7 +2,7 @@
 * Author: Marco Zamora
 * Class: CS 162
 * Date: 3/10/15
-* Edited: 3/13/15
+* Edited: 3/14/15
 * Final Project
 *
 * Purpose: provides declarations for the functions that run the main function
@@ -21,10 +21,10 @@ using std::streamsize;
 using std::max;
 using std::numeric_limits;
 
-//types of possible actions
+//types of possible actions. Starts at 1
 enum action { LEAVE = 1, GRAB, INTERACT };
 
-//types of possible rooms
+//types of possible rooms. Starts at 1
 enum direction { NORTH = 1, EAST, SOUTH, WEST };
 
 //allows user to see answers to the game
@@ -53,5 +53,8 @@ Room* getDirection(Player* player, Room* room);
 
 //follow through on player's choice
 void performAction(int act, Player* player, Room* room, vector<Room*> map );
+
+//free rooms and items in rooms
+void deleteRooms(vector<Room*>& map);
 
 #endif

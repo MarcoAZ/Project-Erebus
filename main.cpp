@@ -12,7 +12,10 @@
 
 int main()
 {
+	system("clear");
+	
 	//introduce the game
+	introduction();
 	
 	//gave tester ability to see the goal for the game
 	showGoal();

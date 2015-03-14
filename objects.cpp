@@ -65,19 +65,19 @@ void Room::displayDoors()
 {
 	if(this->getN())
 	{
-		cout << "(1) " << (this->getN())->getName();
+		cout << "(1)" << (this->getN())->getName() << " ";
 	}
 	if(this->getE())
 	{
-		cout << "(2)" << (this->getE())->getName();
+		cout << "(2)" << (this->getE())->getName() << " ";
 	}
 	if(this->getS())
 	{
-		cout << "(3)" << (this->getS())->getName();
+		cout << "(3)" << (this->getS())->getName() << " ";
 	}
 	if(this->getW())
 	{
-		cout << "(4)" << (this->getW())->getName();
+		cout << "(4)" << (this->getW())->getName() << " ";
 	}
 }
 /*
@@ -129,7 +129,7 @@ bool Boss::listItems( vector<Item*>* items)
 	}
 	
 	if(!itemAvailable)
-		cout << "I don't think he'd like me looking through his stuff..." ;
+		cout << "I don't think he'd like me looking through his stuff..." << endl;
 	return itemAvailable;
 }
 /*
@@ -274,20 +274,19 @@ void Boss::interact(Room* room, vector<Room*> map, Player* p )
 	if(this->isDistracted())
 	{
 		//search email
-		cout << "Doing spy stuff!" << endl;
+		cout << "Looks like there's some emails between him and the NSA. I'll copy these..." << endl;
 		Item* usb = p->getUSB();
 		static_cast<USB*>(usb)->copyEmails(true);
 	}
 	else if(!this->isDistracted() && static_cast<Breakroom*>(map[BREAK])->hasCakes())
 	{
 		this->distract(true);
-		cout << "\"I left some cupcakes in the breakroom!\"";
+		cout << "\"I left some cupcakes in the breakroom!\"" << endl;
 	}
 	else
 	{
 		//short conversation
-		//TEMPORARY
-		cout << "Hope everything is going well!" << endl;
+		cout << "\"Hope everything is going well!\"" << endl;
 	}
 }
 
@@ -297,18 +296,18 @@ void Cubicle1::interact(Room* room, vector<Room*> map, Player* p)
 	if(this->isDistracted())
 	{
 		//copy files from computer
-		cout << "Copying data!" << endl;
+		cout << "Looks like he has access to the database of private user data. I'll make copies of this." << endl;
 		Item* usb = p->getUSB();
 		static_cast<USB*>(usb)->copyData(true);
 	}
 	else if(!this->isDistracted() && static_cast<Breakroom*>(map[BREAK])->hasCakes())
 	{
 		this->distract(true);
+		cout << "\"I left some cupcakes in the breakroom!\"" << endl;
 	}
 	else
 	{
 		//short conversation
-		//TEMPORARY
 		cout << "\"Everything ok?\"" << endl;
 	}
 }
@@ -318,18 +317,18 @@ void Cubicle2::interact(Room* room, vector<Room*> map, Player* p)
 	if(this->isDistracted())
 	{
 		//copy files from computer
-		cout << "Copying data!" << endl;
+		cout << "Looks like he has access to the database of private user data. I'll make copies of this." << endl;
 		Item* usb = p->getUSB();
 		static_cast<USB*>(usb)->copyData(true);
 	}
 	else if(!this->isDistracted() && static_cast<Breakroom*>(map[BREAK])->hasCakes())
 	{
 		this->distract(true);
+		cout << "\"I left some cupcakes in the breakroom!\"" << endl;
 	}
 	else
 	{
 		//short conversation
-		//TEMPORARY
 		cout << "\"Everything ok?\"" << endl;
 	}
 }
@@ -344,11 +343,11 @@ void Breakroom::interact(Room* room, vector<Room*> map, Player* p )
 		p->removeItem("Cupcakes");
 		//set breakroom to having cupcakes
 		this->setCakes(hasCupcakes);
-		cout << "You leave cupcakes for your coworkers. How nice of you!";
+		cout << "You leave cupcakes for your coworkers. How nice of you!" << endl;
 	}
 	else
 	{
-		cout << "There's nothing interesting to see...";
+		cout << "There's nothing interesting to see..." << endl;
 	}
 }
 //server interactions
@@ -360,7 +359,7 @@ void Server::interact(Room* room, vector<Room*> map, Player* p )
 		bool hasUSB = p->inPocket("USB Drive");
 		if(hasUSB)
 		{
-			cout << "Uploaded the killswitch to the server!";
+			cout << "Uploaded the killswitch to the server!" << endl;
 			//set the usb to show that the USB has uploaded the killswitch
 			Item* usb = p->getUSB();
 			static_cast<USB*>(usb)->uploading(true);
@@ -378,7 +377,7 @@ void Server::interact(Room* room, vector<Room*> map, Player* p )
 //outside interaction
 void Outside::interact(Room*, vector<Room*>, Player* p)
 {
-	cout << "You decide to walk away with the mission incomplete...";
+	cout << "You decide to walk away with the mission incomplete..." << endl;
 	p->abortingMission(true);
 }
 /*

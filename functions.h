@@ -57,4 +57,10 @@ void performAction(int act, Player* player, Room* room, vector<Room*> map );
 //free rooms and items in rooms
 void deleteRooms(vector<Room*>& map);
 
+//displays the objective of the game
+void introduction();
+
+//requires the user to press enter to continue
+void pressEnter();
+
 #endif

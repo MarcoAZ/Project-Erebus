@@ -19,10 +19,11 @@ const char* NAME = "names.txt";
 */
 void play( Player* player, vector<Room*> map )
 {
-	
 	//runs while the player has not met all three requirements or player hasn't aborted mission
 	while( !(player->allDone()) && !player->abortStatus() )
 	{
+		system("clear");
+		
 		Room* currentRoom = player->getCurrentRoom();
 		
 		//output room description or story
@@ -34,6 +35,15 @@ void play( Player* player, vector<Room*> map )
 		//get what user wants to do
 		//of that action, follow through and get direction/item/interaction
 		performAction(getAction(), player, currentRoom, map);
+		
+		//press enter to continue
+		pressEnter();
+	}
+	
+	if( player->allDone())
+	{
+		cout << "You got all the evidence. It's time for people to know the truth." << endl;
+		cout << "Thanks for playing!" << endl;
 	}
 	
 }
@@ -276,13 +286,16 @@ void showGoal()
 	}
 	if(toupper(ans) == 'Y')
 	{
-		cout << "To complete the mission, you must 1)Pick up the newspaper with the ";
-		cout << "USB hidden inside, 2) Buy cupcakes from the lobby and leave them ";
-		cout << "in the breakroom, 3)Tell the supervisor and at least one other ";
-		cout << "coworker about the cupcakes, 4)Use their PCs to get evidence ";
-		cout << "5)Get the keycard from the supervisor's office to access the server room, ";
-		cout << "and 6)Use the USB drive on the server. Finally, leave the building!";
+		cout << "To complete the mission, you must:" << endl;
+		cout << "1)Pick up the newspaper with the USB hidden inside,"<< endl;
+		cout << "2) Buy cupcakes from the lobby and leave them in the breakroom," << endl;
+		cout << "3)Tell the supervisor and at least one other coworker about the cupcakes," << endl;
+		cout << "4)Use their PCs to get evidence, " << endl;
+		cout << "5)Get the keycard from the supervisor's office to access the server room, "<< endl;
+		cout << "and 6)Use the USB drive on the server. Finally, leave the building!"<< endl;
 	}
+	cout << endl;
+	pressEnter();
 }
 
 /*
@@ -296,4 +309,45 @@ void deleteRooms(vector<Room*>& map)
 	{
 		delete map.at(i);
 	}
+}
+/*
+*	Purpose: shows the objectives for the game
+*	Parameters: none
+*	Returns: nothing
+*/
+void introduction()
+{
+cout << endl;
+cout << "You are a software developer at Ingen Systems that provides hardware and software"<< endl;
+cout << "to businesses, enterprises, and even foreign governments. The secrecy surrounding"<< endl;
+cout << "Project Erebus has given you a bad feeling. Your suspicions are proven correct"<< endl;
+cout << "when you are contacted by a mysterious group calling themselves HERMES,"<< endl;
+cout << "whose objective is to protect people's right to privacy. They explain the"<< endl;
+cout << "government funded project was a worm that could monitor any activity on a user's"<< endl;
+cout << "computer and report it back to the corporation. It spreads by copying itself onto"<< endl;
+cout << "USB drives and through networks. With your access to the building and its servers,"<< endl;
+cout << "you are one of the few people capable of blowing the whistle. It's not enough"<< endl;
+cout << "to destroy the project. You'll need proof of what has happened."<< endl;
+cout << endl;
+cout << "Your objectives:"<< endl;
+cout << "	1)Retrieve the USB drive from the HERMES agent"<< endl;
+cout << "	2) Find proof of the government agency's knowledge and intentions for the software."<< endl;
+cout << "	3) Get samples of the data that's been collected"<< endl;
+cout << "	4) Upload the group's counter-measure on the USB to the corporate servers"<< endl;
+cout << "	5) Get the data out of the building!"<< endl;
+cout << endl;
+cout << "	You can leave at anytime, but you must complete all objectives to take down Ingen Systems!" << endl;
+	cout << endl;
+	pressEnter();
+}
+/*
+*	Purpose: has the player press enter to continue
+*	Parameters: none
+*	Returns: nothing
+*/
+void pressEnter()
+{
+	cout << "Press enter to continue";
+	std::cin.ignore( std::numeric_limits<std::streamsize>::max(), '\n' );
+	cin.get();
 }

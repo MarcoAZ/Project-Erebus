@@ -2,7 +2,7 @@
 * Author: Marco Zamora
 * Class: CS 162
 * Date: 3/7/15
-* Edited: 3/10/15
+* Edited: 3/13/15
 * Final Project
 *
 * Purpose: the engine for the text adventure
@@ -31,6 +31,7 @@ int main()
 		
 	//create player and start player in office
 	Player* player = new Player( HQ[MYDESK] );
+	player->abortingMission(false);
 	
 	//play game while user has not met finish requirements
 	play(player, HQ);

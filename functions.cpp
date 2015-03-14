@@ -2,7 +2,7 @@
 * Author: Marco Zamora
 * Class: CS 162
 * Date: 3/10/15
-* Edited: 3/11/15
+* Edited: 3/13/15
 * Final Project
 *
 * Purpose: provides definitions for the functions that run the main function
@@ -35,7 +35,7 @@ void play( Player* player, vector<Room*> map )
 		//of that action, follow through and get direction/item/interaction
 		performAction(getAction(), player, currentRoom, map);
 	}
-	cout << "leaving!" << endl;
+	
 }
 
 /*
@@ -44,35 +44,39 @@ void play( Player* player, vector<Room*> map )
 void loadRooms( vector<Room*>& map )
 {
 	//create cubicle
-	Room* cubicle = new MyCubicle(MYDESK);
+	Room* cubicle = new Room(MYDESK);
 	map.push_back( cubicle );
 	
 	//create development floor
-	Room* devFloor = new Hallway(DEVFLOOR);
+	Room* devFloor = new Room(DEVFLOOR);
 	map.push_back(devFloor);
 	
 	//create cubicle/offices transition room
-	Room* offices = new Offices(OFFICES);
+	Room* offices = new Room(OFFICES);
 	map.push_back(offices);
 	
 	//create coworker 1's office
 	Room* cw1 = new Cubicle1(CW1);
+	static_cast<Cubicle1*>(cw1)->distract(false); //default is not distracted
 	map.push_back(cw1);
 	
 	//create coworker 2's office
 	Room* cw2 = new Cubicle2(CW2);
+	static_cast<Cubicle2*>(cw2)->distract(false); //default is not distracted
 	map.push_back(cw2);
 	
 	//create boss' office
 	Room* boss = new Boss(BOSS);
+	static_cast<Boss*>(boss)->distract(false); //default is not distracted
 	map.push_back(boss);
 	
 	//create breakroom
 	Room* breakroom = new Breakroom(BREAK);
+	static_cast<Breakroom*>(breakroom)->setCakes(false); //starts with no cupcakes :(
 	map.push_back(breakroom);
 	
 	//create elevator
-	Room* elevator = new Elevator(ELEVATOR);
+	Room* elevator = new Room(ELEVATOR);
 	map.push_back(elevator);
 	
 	//create server floor
@@ -81,6 +85,7 @@ void loadRooms( vector<Room*>& map )
 	
 	//create lobby
 	Room* lobby = new Lobby(LOBBY);
+	static_cast<Lobby*>(lobby)->updatePaper(false); //player must update paper later
 	map.push_back(lobby);
 	
 	//create outside
@@ -155,7 +160,7 @@ void nameRooms(vector<Room*>& map)
 		if(names.fail() )
 		{
 			cout << "An error occured with " << NAME << endl;
-			exit(-1);
+			exit(-3);
 		}
 	}
 	
@@ -237,16 +242,19 @@ Room* getDirection(Player* player, Room* room)
 void loadItems(vector<Room*>& map )
 {
 	//load MYDESK items
-	Item* photo = new Photo("Photo");
+	Item* photo = new Item("Photo");
 	map[MYDESK]->addItemToRoom(photo);
 	//finished MYDESK items
 	//lobby Items
-	Item* paper = new Newspaper("Newspaper");
-	Item* usb = new USB("USB Drive");
+	Item* paper = new Item("Newspaper");
 	Item* cakes = new Cupcakes("Cupcakes");
+	Item* usb = new USB("USB Drive");
+	static_cast<USB*>(usb)->uploading(false);	//set usb values to false
+	static_cast<USB*>(usb)->copyData(false);
+	static_cast<USB*>(usb)->copyEmails(false);	
 	map[LOBBY]->addItemToRoom(paper);
-	map[LOBBY]->addItemToRoom(usb);
 	map[LOBBY]->addItemToRoom(cakes);
+	map[LOBBY]->addItemToRoom(usb);
 	//end lobby items
 	//boss office
 	Item* key = new Keycard("Keycard");

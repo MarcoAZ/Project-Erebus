@@ -2,7 +2,7 @@
 * Author: Marco Zamora
 * Class: CS 162
 * Date: 3/7/15
-* Edited: 3/12/15
+* Edited: 3/13/15
 * Final Project
 *
 * Purpose: declarations for rooms, player, and items
@@ -13,6 +13,7 @@
 #include <vector>
 #include <cstddef> //NULL
 #include <iostream>
+#include <cstdlib> //exit()
 
 using std::cin;
 using std::cout;
@@ -125,7 +126,6 @@ protected:
 class Player
 {
 private:
-	int steps;
 	Room* currentRoom;
 	vector<Item*> pocket; //item storage
 	int pocketSize;
@@ -133,7 +133,6 @@ private:
 public:
 	Player()
 	{
-		steps = 0;
 		pocketSize = 4;
 		currentRoom = NULL;
 		abortMission = false;
@@ -141,20 +140,10 @@ public:
 
 	Player(Room* current)
 	{
-		steps = 0;
 		pocketSize = 4;
 		currentRoom = current;
 		abortMission = false;
 	};
-	
-	bool distractedCoW1; //removed coworkers from their offices
-	bool distractedCoW2;
-	
-	void addStep()		//track steps and add steps
-	{	steps++;}
-	
-	int getSteps()
-	{	return steps;}
 	
 	Room* getCurrentRoom()		//current room location and room changes
 	{	return currentRoom;}
@@ -171,19 +160,19 @@ public:
 	bool abortStatus()		//checks mission status
 	{	return abortMission;}
 	
-	void abortingMission()		//aborts the mission
-	{	abortMission = true;}
+	void abortingMission(bool b)		//aborts the mission
+	{	abortMission = b;}
 	
 	bool grabItem( Item* i );		//add item to pocket
 	void chooseItem(Room* room);//choose an item from the room to pass to grabItem
 	void removeItem( string );	//remove item from pocket
 	bool inPocket( string );	//is specified item in pocket?
-	Item* getUSB();//gets pointer to the usb
+	Item* getUSB();				//gets pointer to the usb in player pocket
 	
 	bool hasEmailData();	//finds usb in player's pocket 
-												//and determines if it has the email evidence
-	bool hasCodeData();	//checks if code data is on usb
-	bool uploadedUSB();	//checks if usb was used on server
+							//and determines if it has the email evidence
+	bool hasCodeData();		//checks if code data is on usb
+	bool uploadedUSB();		//checks if usb was used on server
 	
 	bool allDone();	//checks if all of the requirements for mission complete are met
 };
@@ -191,49 +180,22 @@ public:
 /*
 * Declarations for every room in the game
 */
-//starting cubicle
-class MyCubicle : public Room
-{
-private:
-	
-
-public:
-	MyCubicle() : Room(){};
-	MyCubicle(type t) : Room(t){};
-
-};
-
-//software development hallway
-class Hallway : public Room
-{
-private:
-
-public:
-	Hallway() : Room(){};
-	Hallway(type t) : Room(t){};
-
-};
-
-//elevator
-class Elevator : public Room
-{
-private:
-
-public:
-	Elevator() : Room(){};
-	Elevator(type t) : Room(t){};
-};
-
-//HQ lobby
+//lobby
 class Lobby : public Room
 {
 private:
-	
+	bool paperStatus;	//has the player already grabbed the newspaper?
 public:
 	Lobby() : Room(){};
 	Lobby(type t) : Room(t){};
+	
+	bool listItems( vector<Item*>* items);	//can hide an item
+	
+	void updatePaper(bool b)
+	{	paperStatus = b;}
+	bool grabbedPaper()
+	{	return paperStatus;}
 };
-
 //employee break room
 class Breakroom : public Room
 {
@@ -266,16 +228,6 @@ public:
 
 };
 
-//neighbor object is a room that leads to either Cubicle1, Cubicle2, or boss office
-//and has nothing else special about it at the moment
-class Offices : public Room
-{
-private:
-
-public:
-	Offices() : Room(){};
-	Offices(type t) : Room(t){};
-};
 //supervisor office
 class Boss : public Room
 {
@@ -333,7 +285,7 @@ public:
 	{	distracted = b;}
 };
 
-//outside. the final room
+//outside
 class Outside : public Room
 {
 private:
@@ -341,6 +293,9 @@ private:
 public:
 	Outside() : Room(){};
 	Outside(type t) : Room(t){};
+	
+	void listActions(vector<Room*>, Player*);	//lists what can be done in the room
+	void interact(Room*, vector<Room*>, Player*);//user can select what to do in the room
 };
 
 /*
@@ -369,31 +324,14 @@ public:
 
 };
 
-//photo
-class Photo : public Item
-{
-private:
-
-public:
-	Photo() : Item(){};
-	Photo(string n) : Item(n){};
-};
-
-//newspaper
-class Newspaper : public Item
-{
-private:
-	
-public:
-	Newspaper() : Item(){};
-	Newspaper(string n) : Item(n){};
-};
 
 //USB drive
 class USB : public Item
 {
 private:
 	bool uploaded;		//was it uploaded to the server?
+	bool data;			//has examples of private data?
+	bool email;			//has emails between gov't and company
 public:
 	USB() : Item(){};
 	USB(string n) : Item(n){};
@@ -403,6 +341,20 @@ public:
 	
 	bool getUpload()		//get uploaded status
 	{	return uploaded;}
+	
+	void copyData(bool b)	//set data
+	{	data = b;}
+	
+	bool hasData()
+	{	return data;}
+	
+	void copyEmails(bool b)	//set emails
+	{	email = b;}
+	
+	bool hasEmails()
+	{	return email;}
+	
+	
 };
 
 //keycard
@@ -415,14 +367,6 @@ public:
 	Keycard(string n) : Item(n){};
 };
 
-////note
-//class Note : public Item
-//{
-//private:
-
-//public:
-
-//};
 /*
 * End of item declarations
 */

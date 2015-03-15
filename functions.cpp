@@ -19,11 +19,17 @@ const char* NAME = "names.txt";
 */
 void play( Player* player, vector<Room*> map )
 {
+	//declare clock
+	time_t start = time(0);
+	double elapsed;
+
 	//runs while the player has not met all three requirements or player hasn't aborted mission
-	while( !(player->allDone()) && !player->abortStatus() )
+	while( !(player->allDone()) && !player->abortStatus() && elapsed/60 < MAX_TIME)
 	{
 		system("clear");
-		
+
+		timeLeft(start, elapsed);
+				
 		Room* currentRoom = player->getCurrentRoom();	
 		
 		//output room description or story
@@ -42,12 +48,26 @@ void play( Player* player, vector<Room*> map )
 		pressEnter();
 	}
 	
-	if( player->allDone())
-	{
+	if( elapsed/60 >= MAX_TIME)
+		cout << "You ran out of time and they're coming to get you!" << endl;
+	else if( player->allDone())
 		cout << "You got all the evidence. It's time for people to know the truth." << endl;
-		cout << "Thanks for playing!" << endl;
-	}
+
+	cout << "Thanks for playing!" << endl;
+}
+/*
+*	Purpose: gets elapsed time and reports how much time is left
+*	Parameters: reference to elapsed time
+*	Returns: nothing
+*/
+void timeLeft(time_t s, double& e)
+{
+	e = difftime(time(0), s);
 	
+	//get minutes left. elapsed is in seconds
+	double minutesLeft = MAX_TIME - e/60;
+	
+	cout << "Time left: "<< setprecision(2) << fixed << minutesLeft << " minutes" <<  endl;
 }
 
 /*
@@ -338,6 +358,7 @@ cout << "	3) Get samples of the data that's been collected"<< endl;
 cout << "	4) Upload the group's counter-measure on the USB to the corporate servers"<< endl;
 cout << "	5) Get the data out of the building!"<< endl;
 cout << endl;
+cout << "Lastly, you have 5 minutes to complete these objectives. Any longer and you risk being discovered." << endl << endl;
 cout << "	You can leave at anytime, but you must complete all objectives to take down Ingen Systems!" << endl;
 	cout << endl;
 	pressEnter();

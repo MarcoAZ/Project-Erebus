@@ -11,8 +11,10 @@
 #define FUNCTIONS_H
 #include "objects.h"
 #include <fstream>
-#include <cstdlib> //exit(int)
+#include <cstdlib> //exit
 #include <limits> //numeric_limits
+#include <time.h> //clock
+#include <iomanip> //setprecision
 
 using std::cin;
 using std::ifstream;
@@ -20,12 +22,16 @@ using std::ios;
 using std::streamsize;
 using std::max;
 using std::numeric_limits;
+using std::setprecision;
+using std::fixed;
 
 //types of possible actions. Starts at 1
 enum action { LEAVE = 1, GRAB, INTERACT };
 
 //types of possible rooms. Starts at 1
 enum direction { NORTH = 1, EAST, SOUTH, WEST };
+
+const double MAX_TIME = 5;
 
 //allows user to see answers to the game
 void showGoal();
@@ -62,5 +68,8 @@ void introduction();
 
 //requires the user to press enter to continue
 void pressEnter();
+
+//sets elapsed time and reports time left
+void timeLeft(time_t s, double& e);
 
 #endif

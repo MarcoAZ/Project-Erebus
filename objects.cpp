@@ -2,7 +2,7 @@
 * Author: Marco Zamora
 * Class: CS 162
 * Date: 3/7/15
-* Edited: 3/13/15
+* Edited: 3/14/15
 * Final Project
 *
 * Purpose: definitions for rooms, player, and items
@@ -378,7 +378,7 @@ void Server::interact(Room* room, vector<Room*> map, Player* p )
 		}
 		else
 		{
-			cout << "I need the killswitch program first!"; << endl;
+			cout << "I need the killswitch program first!" << endl;
 		}
 	}
 	else

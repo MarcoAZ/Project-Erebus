@@ -24,10 +24,12 @@ void play( Player* player, vector<Room*> map )
 	{
 		system("clear");
 		
-		Room* currentRoom = player->getCurrentRoom();
+		Room* currentRoom = player->getCurrentRoom();	
 		
 		//output room description or story
 		cout << endl << "Current Room is " << currentRoom->getName() << endl;
+		
+		currentRoom->showDescription(player);
 		
 		//list all player options
 		currentRoom->listOptions(player, map);

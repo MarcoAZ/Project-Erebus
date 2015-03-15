@@ -25,6 +25,10 @@ enum type { MYDESK, DEVFLOOR, OFFICES, CW1, CW2, BOSS, BREAK, ELEVATOR, SERVER, 
 
 class Player;
 
+//for some rooms, I did not have derived class. the base class calls these functions
+//when it prints out the room description
+void myDeskDescription(Player*);
+
 //item abstract class
 class Item
 {
@@ -74,6 +78,7 @@ public:
 												//interact with item, object, or person
 	virtual void listActions(vector<Room*>, Player*);//lists available interactions in room
 	virtual void interact(Room*, vector<Room*>, Player*);//user can select what to do in the room
+	virtual void showDescription(Player*);	//updates the player with story elements from the room
 	virtual ~Room();
 	
 	vector<Item*>* getItems()		//get reference to items
@@ -192,6 +197,7 @@ public:
 	Lobby(type t) : Room(t){};
 	
 	bool listItems( vector<Item*>* items);	//can hide an item
+	void showDescription(Player*);	//show story elements for the room
 	
 	void updatePaper(bool b)
 	{	paperStatus = b;}
@@ -209,6 +215,7 @@ public:
 	
 	void listActions(vector<Room*>, Player*);	//lists what can be done in the room
 	void interact(Room*, vector<Room*>, Player*);//user can select what to do in the room
+	void showDescription(Player*);	//show story elements for the room
 	
 	bool hasCakes()
 	{	return cupcakes;}
@@ -227,6 +234,7 @@ public:
 	
 	void listActions(vector<Room*>, Player*);	//lists what can be done in the room
 	void interact(Room*, vector<Room*>, Player*);//user can select what to do in the room
+	void showDescription(Player*);	//show story elements for the room
 
 };
 
@@ -242,6 +250,7 @@ public:
 	void listActions(vector<Room*>, Player*);	//lists what can be done in the room
 	void interact(Room*, vector<Room*>, Player*);//user can select what to do in the room
 	bool listItems( vector<Item*>* items);	//lists items in room or says no items
+	void showDescription(Player*);	//show story elements for the room
 	
 	bool isDistracted()
 	{	return distracted;}
@@ -260,6 +269,7 @@ public:
 	
 	void listActions(vector<Room*>, Player*);	//lists what can be done in the room
 	void interact(Room*, vector<Room*>, Player*);//user can select what to do in the room
+	void showDescription(Player*);	//show story elements for the room
 	
 	bool isDistracted()
 	{	return distracted;}
@@ -279,6 +289,7 @@ public:
 	
 	void listActions(vector<Room*>, Player*);	//lists what can be done in the room
 	void interact(Room*, vector<Room*>, Player*);//user can select what to do in the room
+	void showDescription(Player*);	//show story elements for the room
 	
 	bool isDistracted()
 	{	return distracted;}
@@ -298,6 +309,7 @@ public:
 	
 	void listActions(vector<Room*>, Player*);	//lists what can be done in the room
 	void interact(Room*, vector<Room*>, Player*);//user can select what to do in the room
+	void showDescription(Player*);	//show story elements for the room
 };
 
 /*
@@ -316,16 +328,6 @@ public:
 	Cupcakes() : Item(){};
 	Cupcakes(string n) : Item(n){};
 };
-
-//coffee
-class Coffee : public Item
-{
-private:
-
-public:
-
-};
-
 
 //USB drive
 class USB : public Item

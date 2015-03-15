@@ -273,10 +273,14 @@ void Boss::interact(Room* room, vector<Room*> map, Player* p )
 {
 	if(this->isDistracted())
 	{
-		//search email
-		cout << "Looks like there's some emails between him and the NSA. I'll copy these..." << endl;
-		Item* usb = p->getUSB();
-		static_cast<USB*>(usb)->copyEmails(true);
+		if(!p->inPocket("USB Drive"))
+			cout << "I need someplace to save this evidence!" << endl;
+		else
+		{//search email
+			cout << "Looks like there's some emails between him and the NSA. I'll copy these..." << endl;
+			Item* usb = p->getUSB();
+			static_cast<USB*>(usb)->copyEmails(true);
+		}
 	}
 	else if(!this->isDistracted() && static_cast<Breakroom*>(map[BREAK])->hasCakes())
 	{
@@ -295,10 +299,14 @@ void Cubicle1::interact(Room* room, vector<Room*> map, Player* p)
 {
 	if(this->isDistracted())
 	{
-		//copy files from computer
-		cout << "Looks like he has access to the database of private user data. I'll make copies of this." << endl;
-		Item* usb = p->getUSB();
-		static_cast<USB*>(usb)->copyData(true);
+		if(!p->inPocket("USB Drive"))
+			cout << "I need someplace to save this evidence!" << endl;
+		else
+		{	//copy files from computer
+			cout << "Looks like she has access to the database of private user data. I'll make copies of this." << endl;
+			Item* usb = p->getUSB();
+			static_cast<USB*>(usb)->copyData(true);
+		}
 	}
 	else if(!this->isDistracted() && static_cast<Breakroom*>(map[BREAK])->hasCakes())
 	{
@@ -316,10 +324,14 @@ void Cubicle2::interact(Room* room, vector<Room*> map, Player* p)
 {
 	if(this->isDistracted())
 	{
-		//copy files from computer
-		cout << "Looks like he has access to the database of private user data. I'll make copies of this." << endl;
-		Item* usb = p->getUSB();
-		static_cast<USB*>(usb)->copyData(true);
+		if(!p->inPocket("USB Drive"))
+			cout << "I need someplace to save this evidence!" << endl;
+		else
+		{//copy files from computer
+			cout << "Looks like he has access to the database of private user data. I'll make copies of this." << endl;
+			Item* usb = p->getUSB();
+			static_cast<USB*>(usb)->copyData(true);
+		}
 	}
 	else if(!this->isDistracted() && static_cast<Breakroom*>(map[BREAK])->hasCakes())
 	{
@@ -366,12 +378,12 @@ void Server::interact(Room* room, vector<Room*> map, Player* p )
 		}
 		else
 		{
-			cout << "There's nothing to do with the server right now";
+			cout << "I need the killswitch program first!"; << endl;
 		}
 	}
 	else
 	{
-		cout << "The door is locked and you need a key card to get in";
+		cout << "The door is locked and you need a key card to get in" << endl;
 	}
 }
 //outside interaction
@@ -379,6 +391,106 @@ void Outside::interact(Room*, vector<Room*>, Player* p)
 {
 	cout << "You decide to walk away with the mission incomplete..." << endl;
 	p->abortingMission(true);
+}
+/*
+* Purpose: gives hints on what to do next. tells the story. For rooms of class room,
+*		it will have to find what type of room it is and then call another function
+* Parameters: pointer to player
+* Return: nothing
+*/
+void Room::showDescription(Player* p)
+{
+	int roomType = this->getType();
+	if(roomType == MYDESK)
+		myDeskDescription(p);
+	else if(roomType == DEVFLOOR)
+		cout << "This entire floor is dedicated to developing Ingen System's software." << endl;
+	else if(roomType == OFFICES)
+		cout << "This is were the main developers of Project Erebus work." << endl;
+	else if(roomType == ELEVATOR)
+		cout << "Soft music plays through the speakers. Now, to what floor do I want to go?" << endl;
+}
+//MYDESK description
+void myDeskDescription(Player* p)
+{
+	if(p->inPocket("USB Drive"))
+		cout << "I think I'll just calm my nerves at my desk for a bit." << endl;
+	else if(p->inPocket("Newspaper"))
+		cout << "I can't leave that USB lying around for someone to find!" << endl;
+	else
+	{
+		cout << "There's a HERMES agent waiting for me in the lobby."<< endl;
+		cout << "I better head there first." << endl;
+	}
+}
+//cw1 room description
+void Cubicle1::showDescription(Player* p)
+{	
+	if(!this->isDistracted())
+		cout << "I know she has access to the user data collected by Erebus but I can't use her computer while she's here." << endl;
+	else
+		cout << "Her computer should have some data from Project Erebus that HERMES could use." << endl;
+}
+//cw2 room description
+void Cubicle2::showDescription(Player* p)
+{
+	if(!this->isDistracted())
+		cout << "I know he has access to the user data collected by Erebus but I can't use his computer while he's here." << endl;
+	else
+		cout << "I should look into his files to see if there's user data that could be used as evidence." << endl;
+}
+//boss description
+void Boss::showDescription(Player* p)
+{
+	if(!this->isDistracted())
+	{	cout << "I won't be able to get into the server room without his keycard." << endl;
+		cout << "His email should also have proof that the government is using this software to spy on its citizens." << endl;
+		cout << "I just need to get him away from his office.." << endl;
+	}
+	else if (!p->inPocket("Keycard"))
+		cout << "I need both the keycard to get into the server and some evidence from his computer." << endl;
+	else
+		cout << "I don't think I need anything else from this room." << endl;
+}
+//break room description
+void Breakroom::showDescription(Player* p)
+{
+	if(this->hasCakes())
+		cout << "The cupcakes I left are still here." << endl;
+	else
+		cout << "The breakroom is empty. If only I could get my coworkers in here long enough for me to use their computers." << endl;
+}
+//server description
+void Server::showDescription(Player* p)
+{
+	if(p->inPocket("USB Drive") && p->uploadedUSB())
+		cout << "The killswitch has been uploaded. I should finish up and get out of the building!" << endl;
+	else if(p->inPocket("Keycard"))
+		cout << "I'm in the server room now. It's time to upload the killswitch and end this progam." << endl;
+	else
+		cout << "The server is through this door. I don't have the keycard to get in though. Only my supervisor has that." << endl;
+}
+//lobby description
+void Lobby::showDescription(Player* p)
+{
+	if(!p->inPocket("Newspaper"))
+	{
+		cout << "The HERMES agent should be around here. There he is!" << endl;
+		cout << "He's sitting at a table reading a newspaper by the cafe." << endl; 
+		cout << "He's seen me. He's set down the paper and walked out the door." << endl;
+		cout << "There must be something about the paper that's meant for me." << endl;
+		if(!p->inPocket("Cupcakes"))
+			cout << "Maybe I'll grab some cupcakes while I'm here, too..." << endl;
+	}
+	else if(!p->inPocket("USB Drive"))
+		cout << "I better grab the USB drive before someone else sees it!" << endl;
+	else
+		cout << "The lobby, again. I could always leave right now..." << endl;
+}
+//outside description
+void Outside::showDescription(Player* p)
+{
+	cout << "Should I just leave with what I have? Will it be enough to expose the truth?" << endl;
 }
 /*
 * Purpose: gets a choice from the use for an item to pick up, then adds it to player's pocket
